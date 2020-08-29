@@ -143,3 +143,6 @@ git checkout 分支名    //切换到某个分支
 touch 文件名 //在本地新建一个空白文件
 git add .文件后缀   //将当前目录中的所有.文件后缀的文件加入到缓存区
 That's all.
+
+Reference:
+https://www.jianshu.com/p/662d9bb9cadc
