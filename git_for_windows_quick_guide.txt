@@ -1,0 +1,145 @@
+git for windows快速入门教程
+
+这是朕的江山
+0.535
+2016.05.17 12:22:55
+字数 1,978
+阅读 22,629
+都说git是最好用的版本控制系统，以其独特的分布式版本控制、github的流行和强大的爹Linux系统之父linus将SVN等其它版本控制系统甩开几条街的距离。
+  然而在我要入坑的时候并没有找到很好的快速入门的git for windows的教程，github上的教学视频讲得太快让初学者跟不上，当然git官网的上的官方文档是很好的，也有中文版，不过得细看看很久，我花了两天的时间踩过很多坑才入门，所以寻思着总结一份简单的浅显易懂的教程。
+
+本教程的系统环境是：win10 64位系统
+git版本：git for windows 2.8.2-64位
+
+1.下载
+git for windows下载地址
+
+2.安装
+打开exe格式的安装包后，除了修改安装目录意外，其他选项全部默认即可，一路next后等待安装即可。
+
+3.初始配置
+a.申请一个github账号
+因为git和github是穿一条裤子的，所以有必要先申请一个github的账号，然后记下你的用户名和你申请账号时用的邮箱（即是你的gihub登陆账号），而且对于学习编程的人来说github是最好的开源社区。如果有github账号的人请忽略这一步。
+
+b.在git上配置你的用户名和邮箱
+打开 git bash,输入以下两条命令
+
+git config --global user.name "yourname"
+git config --global user.email "youremail"
+
+这里有几个注意事项：
+（1）yourname处填写你的github用户名，youremail处填写你的github账号
+（2）global前面是有两条横杠的
+你可以使用下面这条命令来查看当前的所有配置
+
+git config --list
+
+如果你发现用户名或者email手贱打错了，还是用上面那两条指令重新设置就可以了
+
+c.在本地创建一个保存git项目的文件夹
+我专门建了一个文件夹用于保存那些要使用git来管理版本控制的项目
+
+cd \e      //转到E盘目录下
+mkdir git_repository  //新建一个名叫git_repository的文件夹
+当然你也可以直接使用eclipse等IDE的project location中的项目文件夹做版本控制，这时候就不需要进行这一步
+
+d.初始化
+在你的项目文件夹下执行下面这个指令初始化git，这个指令会在当前文件夹下新建一个名叫.git的文件夹，里面放置的都是git进行版本控制的文件，这个文件夹是一个隐藏文件夹，需要点击文件夹上方的“查看”，勾选“隐藏的项目”才能看到它
+
+git init
+e.往仓库里添加要进行版本控制的文件
+好了终于开始进行版本控制的正题了，如果你是新建的一个文件夹没有任何文件，那么你只要把你想进行版本控制的文件扔进来，然后执行下面这条命令，在原项目文件夹进行版本控制的同学直接执行下面这条命令即可
+
+git add xxxx
+xxxx就是你要添加的文件，包括文件名和后缀哦，比如hello.txt，然后这样就完了吗？并不是，这条命令只是把文件扔进缓存区而已，还要执行下面这条指令提交到版本控制仓库
+
+git commit -m  "备注信息"
+备注信息处换成你要写的信息即可，比如第一次提交“first commit”
+
+f.查看当前文件状态
+执行下面这条命令可以看见已经提交的文件和缓存区中有什么文件
+
+git status
+如果你修改了文件然而还没有add，可以看见"1 file modified but not commit"等字样，也就是说你修改文件的操作git都知道
+
+g.查看修改部分
+假设现在你在本地仓库里修改了文件，commit后可以查看修改了什么内容，执行下面这条指令即可
+
+git diff
+被修改的内容会用绿色字标出来
+
+至此你已经学会了如何在本地进行基本的版本管理了，那么我想和github上的项目或者我自己的服务器同步应该怎么办呢
+
+4.和服务器同步
+因为我没有其他服务器，所以只用了github为我提供的，github为每个免费用户提供了300M的服务器空间，那么要怎么做才能同步呢？
+
+a.初始化操作
+首先你得先生成一个ssh密钥，请务必执行下面这些语句：
+
+cd ~/.ssh                             //转到C：\用户\你的用户名\.ssh文件夹
+ssh-keygen -C "XX@gmail.com" -t rsa   //生成ssh密钥，这条语句会在.ssh文件夹中生成两个必要的文件：id_rsa和id_rsa.pub，
+                                     //这是用rsa算法生成的公钥和私钥
+其中-C后面那个邮箱使用你自己的github账号
+执行完上面两条语句后一路按ENTER键即可，然后复制生成的密钥，由于命令行中不能使用ctrl+c和ctrl+v，所以需要执行下面这条指令：
+
+clip < ~/.ssh/id_rsa.pub
+然后在浏览器上登陆你的github账户，然后点击右上角的头像，选择Your profile
+
+github截图
+然后点击右上角的Edit profile
+
+github截图
+然后再左边菜单栏选择SSH and GPG keys
+进去之后在SSH keys那里点击右上角的new SSH keys
+然后按ctrl+v把你的密钥复制进去，title可以随便命名，然后点击add，这时候github会验证你是不是本人让你重新输入登录密码，输完就可以了。
+至此本地和github上的初始化操作就算完成了，下面就来连接一下两者
+
+b.连接本地和github服务器
+执行下面这条指令连接github
+
+ssh -T git@github.com
+如果连接成功会提示"You've successfully anthenticated"
+
+c.将服务器上的项目同步到本地仓库
+如果本地一个项目文件都没有，需要将服务器上的整个项目同步到本地，请使用下面这个指令：
+
+git clone 你的github项目的网址
+这样就会把整个项目保存在本地仓库中了
+如果是本地和服务器都有项目文件，只是想获取本地没有的文件，那么先执行下面这条语句：
+
+git remote add origin 你的github项目的网址.git
+注意要在网址后面加上.git，否则会失败，origin是远程主机的名字，你可以把它理解为当前项目的别名你也可以起其他名字，origin是git上原本存在的一个名字，这个步骤会弹出一个窗口让你登陆github，完毕之后就将origin和你的项目匹配起来了
+
+然后有两种方式可以同步github上的项目到本地
+一种是使用fetch指令
+
+git fetch origin
+fetch之后你会发现此时在你本地文件夹中找不到想要同步的项目，因为此时它还在缓存区，你要把它和当前分支合并才行，执行下面这条指令合并分支
+
+git merge origin/master
+执行完毕之后你就能在本地文件夹看到它了
+这里的master是本地仓库的主分支
+
+还有一种更简单的方式，使用pull指令，这样一条指令就够了
+
+git pull origin master
+这条指令等价于上一种方法的两条指令的效果
+
+d.将本地项目同步到github服务器
+使用push指令将本地项目同步到服务器
+
+git push origin master
+这里的master是你github上的项目主分支master
+
+至此入门教程就完了，下面再总结一些比较常用的指令
+
+5.常用命令
+git help <verb> //查看git的命令手册
+git help config  //查看配置命令
+git log //查看在历史日志
+git branch -a   //查看当前所有分支
+git branch -d 分支名   //删除某个分支
+git checkout 分支名    //切换到某个分支
+touch 文件名 //在本地新建一个空白文件
+git add .文件后缀   //将当前目录中的所有.文件后缀的文件加入到缓存区
+That's all.
